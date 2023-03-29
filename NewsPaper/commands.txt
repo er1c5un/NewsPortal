@@ -1,0 +1,61 @@
+from news.models import *
+from django.contrib.auth.models import User
+ivan = User.objects.create_user('ivan')
+eric = User.objects.create_user('eric')
+ivan_author = Author.objects.create(user=ivan,rate=0)
+eric_author = Author.objects.create(user=eric,rate=0)
+python_category = Category.objects.create(name='python')
+django_category = Category.objects.create(name='django') 
+music_category = Category.objects.create(name='music')   
+cars_category = Category.objects.create(name='cars')
+
+post_state_1 = Post.objects.create(author=eric_author,type=state,title='Первая статья',text='Текст первой статьи')
+post_state_2 = Post.objects.create(author=ivan_author,type=state,title='Вторая статья',text='Текст второй статьи')
+post_news_1 = Post.objects.create(author=ivan_author,type=news,title='Первая новость',text='Текст новости')
+post_state_1_category_1 = PostCategory.objects.create(post=post_state_1,category=python_category)
+post_state_1_category_2 = PostCategory.objects.create(post=post_state_1,category=django_category)
+post_state_2_category_3 = PostCategory.objects.create(post=post_state_2,category=music_category)  
+post_news_1_category_4 = PostCategory.objects.create(post=post_news_1,category=cars_category)
+
+comment_1 = Comment.objects.create(post=post_state_1,user=eric,text='Это моя первая статья, зацените!')  
+comment_2 = Comment.objects.create(post=post_state_1,user=ivan,text='Я заценил, классная статья!')
+comment_3 = Comment.objects.create(post=post_state_2,user=ivan,text='Тоже неплохая статья')
+comment_4 = Comment.objects.create(post=post_news_1,user=eric,text='Интересная новость')
+
+post_state_1.like()
+post_state_1.like()
+post_state_1.like()
+post_state_1.like()
+post_state_2.like()
+post_news_1.like()
+post_news_1.like()
+
+post_state_1.save()
+post_state_2.save()
+post_news_1.save()
+
+eric_author.update_rate()
+eric_author.save() #12
+ivan_author.update_rate()
+ivan_author.save() #9
+
+best_user_dict = Author.objects.all().order_by('-rate').values('user', 'rate')[0]
+#{'user': 6, 'rate': 12}
+
+best_username = User.objects.filter(id=best_user_dict['user']).values('username')[0]['username']
+best_rate = best_user_dict['rate']
+
+# лучшая по рейтингу статья. Выводит словарь типа: {'create_date': datetime.datetime(2023, 3, 29, 19, 52, 47, 469443, tzinfo=datetime.timezone.utc), 'author': 2, 'rate': 4, 'title': 'Первая статья'}
+best_post = Post.objects.all().order_by('-rate').values('create_date', 'author', 'rate', 'title', 'id')[0]
+
+# получаем объект поста с лучшим рейтингом
+best_post_object = Post.objects.filter(id=best_post['id'])[0]
+
+# выводим превью лучшего поста
+best_post_object.preview()
+
+# выводим юзернейм юзера, у которого лучший пост
+User.objects.filter(id=best_post_object.author.user_id)[0].username
+
+# выводит все комментарии лучшей статьи
+best_post_comments = Comment.objects.filter(post=best_post_object).values('create_date', 'user', 'text', 'rate')

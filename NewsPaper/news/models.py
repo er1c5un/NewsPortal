@@ -15,7 +15,7 @@ class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rate = models.IntegerField(default=0)
 
-    def update_rate(self, rate):
+    def update_rate(self):
         author_posts = Post.objects.filter(author=self)
         post_rate_sum = 0
         comment_post_rate_sum = 0
@@ -56,7 +56,7 @@ class Post(models.Model):
         self.rate = new_rate if new_rate >= 0 else 0
 
     def preview(self):
-        return self.text[:123] + '...' if len(self.text(self)) >= 124 else self.text + '...'
+        return self.text[:123] + '...' if len(self.text) >= 124 else self.text
 
 
 
@@ -67,7 +67,7 @@ class PostCategory(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, default=0)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
     rate = models.IntegerField(default=0)
