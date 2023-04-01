@@ -48,6 +48,9 @@ class Post(models.Model):
     text = models.TextField()
     rate = models.IntegerField(default=0)
 
+    def __str__(self):
+       return f'Пост {self.title}: {self.text[:15]}'
+
     def like(self):
         self.rate += 1
 
