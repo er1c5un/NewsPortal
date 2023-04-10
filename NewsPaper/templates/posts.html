@@ -9,5 +9,24 @@
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 <h1>Все посты</h1>
-{{ posts }}
+{% if posts %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Текст статьи</td>
+           </tr>
+
+           {% for post in posts %}
+           <tr>
+               <td>{{ post.title }}</td>
+               <td>{{ post.create_date|date:'d M Y'}}</td>
+               <td>{{ post.text|truncatechars:25 }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Увы, в этом разделе пока нет статей</h2>
+   {% endif %}
 {% endblock content %}

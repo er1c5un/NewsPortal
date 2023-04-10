@@ -8,5 +8,9 @@
 
 <!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
 {% block content %}
-<h1>{{ post }}</h1>
+{% if post %}
+               <h1>{{ post.title }}</h1>
+               <h2>{{ post.create_date|date:'d M Y'}}</h2>
+               <h2>{{ post.text }}</h2>
+{% endif %}
 {% endblock content %}
