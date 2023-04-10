@@ -66,6 +66,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'custom_filters': 'news.templatestags.custom_filters',
+                'custom_tags': 'news.templatestags.custom_tags',
+
+            }
         },
     },
 ]
