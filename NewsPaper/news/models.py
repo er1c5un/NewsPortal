@@ -61,6 +61,8 @@ class Post(models.Model):
     def preview(self):
         return self.text[:123] + '...' if len(self.text) >= 124 else self.text
 
+    def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
+        return f'/posts/{self.id}'
 
 
 class PostCategory(models.Model):
