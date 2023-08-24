@@ -3,6 +3,11 @@
 {% block title %} П-осты {% endblock title %}
 
 {% block content %}
+<form method="GET">
+    {{ filter.form }}
+    <input type="submit" value="Найти">
+</form>
+
 <style>
     table {
         width: 100%;
