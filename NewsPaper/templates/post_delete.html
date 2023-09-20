@@ -7,13 +7,13 @@
 <table>
     <thead>
         <th>
-            Title
+            Заголовок
         </th>
         <th>
-            Category
+            Автор
         </th>
         <th>
-            Create date
+            Дата создания
         </th>
     </thead>
     <tr>
@@ -21,7 +21,7 @@
             {{ post.title|title }}
         </td>
         <td>
-            {{ post.category.name|title }}
+            {{ post.author.user.username|title }}
         </td>
         <td>
             {{ post.create_date }}

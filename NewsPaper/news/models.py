@@ -15,6 +15,9 @@ class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rate = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.user.username
+
     def update_rate(self):
         author_posts = Post.objects.filter(author=self)
         post_rate_sum = 0
@@ -37,6 +40,10 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 
 class Post(models.Model):

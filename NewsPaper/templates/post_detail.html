@@ -3,18 +3,42 @@
 {% block title %} Список новостей {% endblock title %}
  
 {% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+        border: 1px solid black;
+    }
+    th {
+        font-weight: bold;
+    }
+</style>
 <table>
     <thead>
+        <tr>
         <th>
-            Title
+            Заголовок
         </th>
         <th>
-            Category
+            Категория
         </th>
         <th>
-            Create date
+            Дата создания
         </th>
+        <th>
+            Рейтинг
+        </th>
+        <th>
+            Текст
+        </th>
+    </tr>
     </thead>
+    <tbody>
     <tr>
         <td>
             {{ post.title|title }}
@@ -25,6 +49,13 @@
         <td>
             {{ post.create_date }}
         </td>
+        <td>
+            {{ post.rate }}
+        </td>
+        <td>
+            {{ post.text }}
+        </td>
     </tr>
+    </tbody>
 </table>
 {% endblock content %}

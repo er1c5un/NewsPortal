@@ -29,7 +29,7 @@
         <tr>
             <th>Заголовок</th>
             <th>Дата</th>
-            <th>Текст</th>
+            <!--th>Текст</th-->
             <th>Рейтинг</th>
             <th>Автор</th>
         </tr>
@@ -43,7 +43,7 @@
                 <a href="{% url 'post_delete' post.id %}"><u>Удалить</u></a>
             </td>
             <td>{{ post.create_date|title }}</td>
-            <td>{{ post.text }}</td>
+            <!--td>{{ post.text }}</td-->
             <td>{{ post.rate }}</td>
             <td>{{ post.author.user.username }}</td>
         </tr>

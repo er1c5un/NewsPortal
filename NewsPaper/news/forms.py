@@ -7,6 +7,14 @@ class PostForm(ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'author', 'category', 'text']
+        labels = {
+            'author': 'Автор',
+            'type': 'Тип',
+            'category': 'Категория',
+            'title': 'Заголовок',
+            'text': 'Текст',
+            'rate': 'Рейтинг',
+        }
 
 
 
