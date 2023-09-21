@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, \
     DeleteView
 
@@ -42,7 +43,7 @@ class PostCreateView(CreateView):
     form_class = PostForm
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(UpdateView, LoginRequiredMixin):
     template_name = 'post_create.html'
     form_class = PostForm
 
