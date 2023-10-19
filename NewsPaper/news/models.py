@@ -1,5 +1,7 @@
 from datetime import datetime
-from django.contrib.auth.models import User
+
+from allauth.account.forms import SignupForm
+from django.contrib.auth.models import User, Group
 from django.db import models
 
 state = 'State'
@@ -37,13 +39,20 @@ class Author(models.Model):
         self.rate = post_rate_sum + comment_author_rate_sum + comment_post_rate_sum
 
 
-
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
 
+
+class BasicSignupForm(SignupForm):
+
+    def save(self, request):
+        user = super(BasicSignupForm, self).save(request)
+        basic_group = Group.objects.get(name='common')
+        basic_group.user_set.add(user)
+        return user
 
 
 class Post(models.Model):
@@ -56,7 +65,7 @@ class Post(models.Model):
     rate = models.IntegerField(default=0)
 
     def __str__(self):
-       return f'Пост {self.title}: {self.text[:15]}'
+        return f'Пост {self.title}: {self.text[:15]}'
 
     def like(self):
         self.rate += 1
