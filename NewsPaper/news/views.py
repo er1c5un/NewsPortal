@@ -7,7 +7,7 @@ from .filters import PostFilter
 from .forms import PostForm
 
 
-class PostsListView(ListView):
+class PostsListView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'posts.html'
     context_object_name = 'posts'
@@ -20,7 +20,7 @@ class PostsListView(ListView):
         return context
 
 
-class PostsListSearchView(ListView):
+class PostsListSearchView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'posts_search.html'
     context_object_name = 'posts'
@@ -33,17 +33,17 @@ class PostsListSearchView(ListView):
         return context
 
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     template_name = 'post_detail.html'
     queryset = Post.objects.all()
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     template_name = 'post_create.html'
     form_class = PostForm
 
 
-class PostUpdateView(UpdateView, LoginRequiredMixin):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'post_create.html'
     form_class = PostForm
 
@@ -52,7 +52,7 @@ class PostUpdateView(UpdateView, LoginRequiredMixin):
         return Post.objects.get(pk=id)
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'post_delete.html'
     queryset = Post.objects.all()
     success_url = '/posts/'
