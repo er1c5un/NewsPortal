@@ -91,7 +91,7 @@ DATABASES = {
     }
 }
 
-
+ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
