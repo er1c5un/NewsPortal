@@ -78,7 +78,7 @@ class Post(models.Model):
         return self.text[:123] + '...' if len(self.text) >= 124 else self.text
 
     def get_absolute_url(self):
-        return f'/posts/{self.id}'
+        return f'/{self.id}'
 
 
 class PostCategory(models.Model):

@@ -46,8 +46,9 @@
     </tbody>
 </table>
 <a href="{% url 'post_create' %}">Добавить новый пост</a> <br>
+<button> <a href="/accounts/logout/"> Выход</a> </button>
 {% if is_not_author %}
-<button> <a href="/posts/become_author/"> Стать автором!</a> </button>
+<button> <a href="/become_author/"> Стать автором!</a> </button>
 {% endif %}
 <!-- Проверяем, что поддерживается постраничный вывод -->
 {% if is_paginated %}

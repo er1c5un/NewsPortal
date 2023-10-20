@@ -43,8 +43,13 @@
         <td>
             {{ post.title|title }}
         </td>
-        <td>
+        <!--td>
             {{ post.category.name|title }}
+        </td-->
+        <td>
+        {% for post_category in post.postcategory_set.all %}
+        {{ post_category.category.name|title }}
+        {% endfor %}
         </td>
         <td>
             {{ post.create_date }}

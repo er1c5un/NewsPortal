@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, \
@@ -42,7 +42,8 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     queryset = Post.objects.all()
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post', 'news.change_post')
     template_name = 'post_create.html'
     form_class = PostForm
 
@@ -59,7 +60,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'post_delete.html'
     queryset = Post.objects.all()
-    success_url = '/posts/'
+    success_url = '/'
 
 
 @login_required
@@ -68,4 +69,4 @@ def become_author(request):
     authors_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
         authors_group.user_set.add(user)
-    return redirect('/posts/')
+    return redirect('/')
