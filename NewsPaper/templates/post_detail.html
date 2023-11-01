@@ -62,5 +62,8 @@
         </td>
     </tr>
     </tbody>
+    <button> <a href="/subscribe/?category_id={% for post_category in post.postcategory_set.all %}
+        {{ post_category.category.id }}
+        {% endfor %}"> Подписаться на данную категорию постов</a> </button>
 </table>
 {% endblock content %}
