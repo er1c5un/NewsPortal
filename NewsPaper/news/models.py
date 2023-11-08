@@ -69,6 +69,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, default='')
     text = models.TextField()
     rate = models.IntegerField(default=0)
+    were_sent_on_weekly_mails = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Пост {self.title}: {self.text[:15]}'
