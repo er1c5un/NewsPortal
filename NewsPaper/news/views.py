@@ -49,8 +49,10 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = PostForm
 
     def post(self, request, *args, **kwargs):
+        #user = request.POST['user']
+        author = Author.objects.get(user=request.user.id)
         new_post = Post(
-            author=Author.objects.get(id=request.POST['author']),# получить автора по айдишнику из запроса Category.objects.get(id=category_id)
+            author=author,# получить автора по айдишнику из запроса Category.objects.get(id=category_id)
             #category=Category.objects.get(id=request.POST['category']),
             title=request.POST['title'],
             text=request.POST['text']
@@ -95,6 +97,10 @@ def become_author(request):
     authors_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
         authors_group.user_set.add(user)
+    if not Author.objects.filter(user=user).exists():
+        # Если экземпляр модели Author не существует, создаем его
+        Author.objects.create(user=user, rate=0)
+
     return redirect('/')
 
 
