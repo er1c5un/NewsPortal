@@ -71,8 +71,8 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
             recipient_list=email_list  # здесь список получателей. Например, секретарь, сам врач и т. д.
         )
 
-
         return redirect('/')
+
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'post_create.html'
