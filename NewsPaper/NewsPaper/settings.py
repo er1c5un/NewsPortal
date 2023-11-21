@@ -180,3 +180,9 @@ DEFAULT_FROM_EMAIL = 'er1c5un@yandex.ru'
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 # если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+CELERY_BROKER_URL = 'redis://:42Rabbits@redis-16048.c232.us-east-1-2.ec2.cloud.redislabs.com:16048'
+CELERY_RESULT_BACKEND = 'redis://:42Rabbits@redis-16048.c232.us-east-1-2.ec2.cloud.redislabs.com:16048'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -11,6 +12,7 @@ from django.views.generic import ListView, UpdateView, CreateView, DetailView, \
 from .models import Post, CategorySubscribers, Category, Author
 from .filters import PostFilter
 from .forms import PostForm
+from .tasks import send_email_to_subscribers_of_new_post
 
 
 class PostsListView(LoginRequiredMixin, ListView):
@@ -63,23 +65,8 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         category = Category.objects.get(id=request.POST['category'])
         new_post.category.set([category])  # Используем метод set() для установки значения для поля many-to-many
 
-        subscribers = CategorySubscribers.objects.filter(category=category)
-        email_list = []
-        for sub in subscribers:
-            email_list.append(sub.user.email)
-        context = {
-            'post': new_post,
-        }
-        html_message = render_to_string('account/email/email_new_post.html', context)
-        plain_message = strip_tags(html_message)
-        # отправляем письмо всем админам по аналогии с send_mail, только здесь получателя указывать не надо
-        send_mail(
-            subject=f'{new_post.title}',  # имя клиента и дата записи будут в теме для удобства
-            message=plain_message,  # сообщение с кратким описанием проблемы
-            from_email='er1c5un@yandex.ru',  # здесь указываете почту, с которой будете отправлять (об этом попозже)
-            recipient_list=email_list,  # здесь список получателей. Например, секретарь, сам врач и т. д.
-            html_message=html_message,
-        )
+        #  Запускаем задачу celery по рассылке подписчикам на данную категорию
+        send_email_to_subscribers_of_new_post.delay(category_id=request.POST['category'], post_id=new_post.id)
 
         return redirect('/')
 
