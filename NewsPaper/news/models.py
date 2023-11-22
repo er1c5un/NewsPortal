@@ -2,6 +2,7 @@ from datetime import datetime
 
 from allauth.account.forms import SignupForm
 from django.contrib.auth.models import User, Group
+from django.core.cache import cache
 from django.db import models
 
 state = 'State'
@@ -87,12 +88,14 @@ class Post(models.Model):
     def get_absolute_url(self):
         return f'/{self.id}'
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
+        cache.delete(f'post-{self.pk}')
+
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=0)
-
-
 
 
 class Comment(models.Model):
