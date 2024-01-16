@@ -245,6 +245,7 @@ LOGGING = {
         },
         'mail_admins': {
             'level': 'ERROR',
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'handler_file': {
@@ -257,11 +258,14 @@ LOGGING = {
         'errors_file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
+            'filters': ['require_debug_false'],
             'filename': 'errors.log',
             'formatter': 'error_file_format',
         },
         'security_file': {
             'class': 'logging.FileHandler',
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
             'filename': 'security.log',
             'formatter': 'file_format',
         },
