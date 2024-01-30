@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.views import View
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, \
     DeleteView
 
@@ -14,7 +15,16 @@ from .models import Post, CategorySubscribers, Category, Author
 from .filters import PostFilter
 from .forms import PostForm
 from .tasks import send_email_to_subscribers_of_new_post
+from django.utils.translation import gettext as _  # импортируем функцию для перевода
 
+
+# Create your views here.
+
+class Index(View):
+    def get(self, request):
+        string = _('Hello world')
+
+        return HttpResponse(string)
 
 class PostsListView(LoginRequiredMixin, ListView):
     model = Post

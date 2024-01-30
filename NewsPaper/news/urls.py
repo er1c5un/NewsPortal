@@ -1,8 +1,10 @@
+from django.conf.urls.i18n import i18n_patterns
 from django.views.decorators.cache import cache_page
 
 from .views import PostsListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, PostsListSearchView, \
     become_author, subscribe
 from django.urls import path
+
 urlpatterns = [
     path('', cache_page(60)(PostsListView.as_view())),
     path('search/', cache_page(300)(PostsListSearchView.as_view())),

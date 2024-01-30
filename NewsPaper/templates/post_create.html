@@ -1,13 +1,14 @@
 {% extends 'flatpages/default.html' %}
-{% load cache %}
+{% load i18n %}
+<--{% load cache %}-->
 {% cache 30 title %}
-{% block title %} Список новостей (создать) {% endblock title %}
+{% block title %} !!!Список новостей (создать) {% endblock title %}
 {% endcache %}
 {% block content %}
-<h3>Информация о новости</h3>
+<h3>{% trans "Info about news"%}</h3>
 <form method="POST">
     {% csrf_token %} 
     {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
-    <input type="submit" value="Добавить новость">
+    <input type="submit" value="!!-Добавить новость">
 </form>
 {% endblock content %}
