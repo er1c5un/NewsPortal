@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.views import View
@@ -16,15 +16,31 @@ from .filters import PostFilter
 from .forms import PostForm
 from .tasks import send_email_to_subscribers_of_new_post
 from django.utils.translation import gettext as _  # импортируем функцию для перевода
-
+from django.utils import timezone
+import pytz
 
 # Create your views here.
 
+
 class Index(View):
     def get(self, request):
-        string = _('Hello world')
+        curent_time = timezone.now()
 
-        return HttpResponse(string)
+        # .  Translators: This message appears on the home page only
+        models = Category.objects.all()
+
+        context = {
+            'models': models,
+            'current_time': timezone.now(),
+            'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
+        }
+
+        return HttpResponse(render(request, 'index.html', context))
+
+    #  по пост-запросу будем добавлять в сессию часовой пояс, который и будет обрабатываться написанным нами ранее middleware
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/')
 
 class PostsListView(LoginRequiredMixin, ListView):
     model = Post
@@ -34,6 +50,7 @@ class PostsListView(LoginRequiredMixin, ListView):
     paginate_by = 2
 
     def get_context_data(self, **kwargs):
+        models = Post.objects.all()
         context = super().get_context_data(**kwargs)
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
         context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
