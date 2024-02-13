@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Вот что нового появилось на этой неделе (по вашим подпискам на категории):</h1>
+     {% for post in posts %}
+        <h3><a href="http://127.0.0.1:8000/{{ post.id }}/">{{ post.title }}</a></h3>
+        <!-- Вставляем ссылку на активацию -->
+    {% endfor %}
+</body>
+</html>
