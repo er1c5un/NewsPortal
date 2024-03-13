@@ -1,5 +1,13 @@
-{% block title %} Объявления {% endblock title %}
+{% extends 'flatpages/default.html' %}
+
+{% block title %} П-осты {% endblock title %}
+
 {% block content %}
+<form method="GET">
+    {{ filter.form }}
+    <input type="submit" value="Найти">
+</form>
+
 <style>
     table {
         width: 100%;
@@ -22,7 +30,6 @@
             <th>Заголовок</th>
             <th>Дата</th>
             <!--th>Текст</th-->
-            <th>Рейтинг</th>
             <th>Автор</th>
         </tr>
     </thead>
@@ -30,18 +37,16 @@
         {% for ad in filter.qs %}
         <tr>
             <td>
-                <a href="{% url 'post_detail' post.id %}">{{ ad.title|title }}</a>
-                <!--a href="{% url 'post_update' post.id %}"><u>Редактировать</u></a>
-                <a href="{% url 'post_delete' post.id %}"><u>Удалить</u></a-->
+                {{ ad.title|title }}
             </td>
             <td>{{ ad.create_date|title }}</td>
             <!--td>{{ post.text }}</td-->
-            <td>{{ ad.rate }}</td>
             <td>{{ ad.author.user.username }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+<a href="{% url 'ad_create' %}">Добавить новый пост</a> <br>
 <!-- Проверяем, что поддерживается постраничный вывод -->
 {% if is_paginated %}
 
