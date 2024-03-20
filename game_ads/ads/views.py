@@ -9,6 +9,8 @@ from ads.models import Ad, Person, Category
 from ads.forms import AdForm
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+
+from .filters import MyResponsesFilter
 from .models import Response, Ad
 
 
@@ -86,3 +88,23 @@ class AdDetailView(LoginRequiredMixin, DetailView):
             obj = super().get_object(queryset=self.queryset)
             cache.set(f'ad-{self.kwargs["pk"]}', obj)
         return obj
+
+
+class MyResponsesListView(LoginRequiredMixin, ListView):
+    model = Response
+    template_name = 'my_responses.html'
+    context_object_name = 'my_responses'
+    ordering = ['-create_date']
+    paginate_by = 2
+
+    def get_queryset(self):
+        # Получаем текущего авторизованного пользователя
+        current_user = self.request.user.id
+        # Фильтруем записи модели Response, где автор объявления равен текущему пользователю
+        queryset = Response.objects.filter(ad__author=current_user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = MyResponsesFilter(self.request.GET, queryset=self.get_queryset())
+        return context

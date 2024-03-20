@@ -1,7 +1,7 @@
 #from django.conf.urls.i18n import i18n_patterns
 from django.views.decorators.cache import cache_page
 
-from .views import AdsListView, AdCreateView, CreateResponse, AdDetailView
+from .views import AdsListView, AdCreateView, CreateResponse, AdDetailView, MyResponsesListView
 from django.urls import path
 
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     #path('become_author/', become_author, name='become_author'),
     #path('subscribe/', subscribe, name='subscribe'),
     path('response/<int:ad_id>/', CreateResponse, name='create_response'),
+    path('my_responses/', MyResponsesListView.as_view(), name='my_responses'),
 ]
