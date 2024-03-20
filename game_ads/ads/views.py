@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.views.generic import ListView, CreateView, DetailView
@@ -65,9 +66,12 @@ def CreateResponse(request, ad_id):
 
     if request.method == 'POST':
         text = request.POST.get('text')
-        response = Response(person=request.user, ad=advertisement, text=text)
+        response_person = Person.objects.get(user=request.user.id)
+        response = Response(person=response_person, ad=advertisement, text=text)
         response.save()
         return redirect('ad_detail', pk=ad_id)
+    return render(request, 'create_response.html', {'ad': advertisement})
+    #return HttpResponse("Метод не поддерживается. Этот представление поддерживает только POST запросы.")
 
 
 class AdDetailView(LoginRequiredMixin, DetailView):

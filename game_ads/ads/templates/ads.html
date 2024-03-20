@@ -45,8 +45,6 @@
         <tr>
             <td>
                 <a href="{% url 'ad_detail' ad.id %}">{{ ad.title|title }}</a>
-                <a href="{% url 'ad_detail' ad.id %}"><u>Редактировать</u></a>
-                <a href="{% url 'ad_detail' ad.id %}"><u>Удалить</u></a>
             </td>
             <td>{{ ad.create_date|title }}</td>
             <!--td>{{ post.text }}</td-->

@@ -66,4 +66,7 @@
         {{ ad_category.category.id }}
         {% endfor %}"> Подписаться на данную категорию постов</a> </button-->
 </table>
+{% if user.is_authenticated %}
+    <a href="{% url 'create_response' ad.id %}">Написать отклик</a>
+{% endif %}
 {% endblock content %}
