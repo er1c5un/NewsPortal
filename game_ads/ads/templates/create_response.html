@@ -1,0 +1,6 @@
+<!-- response_form.html -->
+<form method="post" action="{% url 'create_response' ad.id %}">
+    {% csrf_token %}
+    <textarea name="text"></textarea>
+    <button type="submit">Отправить отклик</button>
+</form>

@@ -1,11 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.template import RequestContext
-from django.views.generic import ListView, CreateView
-
+from django.views.generic import ListView, CreateView, DetailView
+from django.core.cache import cache
 from ads.filters import AdFilter
 from ads.models import Ad, Person, Category
 from ads.forms import AdForm
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Response, Ad
 
 
 # LoginRequiredMixin
@@ -54,3 +57,28 @@ class AdCreateView(LoginRequiredMixin, CreateView):
         # send_email_to_subscribers_of_new_post.delay(category_id=request.POST['category'], post_id=new_post.id)
 
         return redirect('/')
+
+
+@login_required
+def CreateResponse(request, ad_id):
+    advertisement = get_object_or_404(Ad, pk=ad_id)
+
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        response = Response(person=request.user, ad=advertisement, text=text)
+        response.save()
+        return redirect('ad_detail', pk=ad_id)
+
+
+class AdDetailView(LoginRequiredMixin, DetailView):
+    template_name = 'ad_detail.html'
+    queryset = Ad.objects.all()
+
+    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
+        obj = cache.get(f'ad-{self.kwargs["pk"]}',
+                        None)
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'ad-{self.kwargs["pk"]}', obj)
+        return obj
