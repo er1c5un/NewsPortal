@@ -1,0 +1,14 @@
+{% extends 'flatpages/default.html' %}
+{% load i18n %}
+{% block title %} Доска объявлений {% endblock title %}
+{% block content %}
+<h3>{% trans "Info about ads"%}</h3>
+<form method="POST">
+    {% csrf_token %} 
+    {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
+    <input type="submit" value="Добавить объявление">
+</form>
+<a href="{% url 'ads' %}">Отмена</a> <br>
+
+
+{% endblock content %}
