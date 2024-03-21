@@ -107,4 +107,32 @@ class MyResponsesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filter'] = MyResponsesFilter(self.request.GET, queryset=self.get_queryset())
+
         return context
+
+
+@login_required
+def accept_response(request):
+    user = request.user
+    #ad_id = int(request.GET.get('ad_id'))
+    response_id = int(request.GET.get('resp_id'))
+    Response.objects.filter(id=response_id).update(accepted=True)
+    mail_accepted_response_back()
+
+    return redirect('/my_responses/')
+
+
+@login_required
+def delete_response(request):
+    user = request.user
+    #ad_id = int(request.GET.get('ad_id'))
+    response_id = int(request.GET.get('resp_id'))
+    Response.objects.filter(id=response_id).update(deleted=True)
+    mail_accepted_response_back()
+
+    return redirect('/my_responses/')
+
+
+def mail_accepted_response_back():
+    print('EMAIL SENDING TO RESPONSER')
+    pass

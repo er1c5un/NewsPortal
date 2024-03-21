@@ -45,14 +45,22 @@
         <tr>
             <td>
                 {{ resp.ad.title }}
+                {% if not resp.accepted and not resp.deleted %}
+                    <button> <a href="/accept_response/?resp_id={{ resp.id }}">Принять отклик</a> </button>
+                    <button> <a href="/delete_response/?resp_id={{ resp.id }}">Удалить отклик</a> </button>
+                {% elif resp.deleted %}
+                  (ОТКЛИК ОТВЕРГНУТ)
+                {% else %}
+                  (ОТКЛИК ПРИНЯТ)
+                {% endif %}
             </td>
             <td>{{ resp.person.user.username }}</td>
-            <!--td>{{ post.text }}</td-->
-            <td>{{ resp.create_date }}</td>
+            <td>{{ resp.text }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+<a href="{% url 'ads' %}">На главную</a>
 <!-- Проверяем, что поддерживается постраничный вывод -->
 {% if is_paginated %}
 

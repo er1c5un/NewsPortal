@@ -61,6 +61,8 @@ class Response(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     text = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
 
 
 class BasicSignupForm(SignupForm):
