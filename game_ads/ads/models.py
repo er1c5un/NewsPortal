@@ -15,7 +15,6 @@ class Person(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    #subscribers = models.ManyToManyField(User, through='CategorySubscribers')
 
     def __str__(self):
         return self.name
@@ -28,27 +27,9 @@ class Ad(models.Model):
     title = models.CharField(max_length=255, default='')
     #  сделать поле текста с контентом (видео, аудио, картинки...)
     text = models.TextField()
-    #were_sent_on_weekly_mails = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Объявление {self.title}: {self.text[:15]}'
-
-    #def like(self):
-    #    self.rate += 1
-
-    #def dislike(self):
-    #    new_rate = self.rate - 1
-    #    self.rate = new_rate if new_rate >= 0 else 0
-
-    #def preview(self):
-    #    return self.text[:123] + '...' if len(self.text) >= 124 else self.text
-
-    #def get_absolute_url(self):
-    #    return f'/{self.id}'
-
-    #def save(self, *args, **kwargs):
-    #    super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
-    #    cache.delete(f'post-{self.pk}')
 
 
 class AdCategory(models.Model):
@@ -69,8 +50,6 @@ class BasicSignupForm(SignupForm):
 
     def save(self, request):
         user = super(BasicSignupForm, self).save(request)
-        #basic_group = Group.objects.get(name='common')
-        #basic_group.user_set.add(user)
         return user
 
 

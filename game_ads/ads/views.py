@@ -24,31 +24,20 @@ class AdsListView(LoginRequiredMixin, ListView):
     paginate_by = 2
 
     def get_context_data(self, **kwargs):
-        # С помощью super() мы обращаемся к родительским классам
-        # и вызываем у них метод get_context_data с теми же аргументами,
-        # что и были переданы нам.
-        # В ответе мы должны получить словарь.
         context = super().get_context_data(**kwargs)
         context['filter'] = AdFilter(self.request.GET, queryset=self.get_queryset())
-        # К словарю добавим текущую дату в ключ 'time_now'.
-        #context['time_now'] = datetime.utcnow()
-        # Добавим ещё одну пустую переменную,
-        # чтобы на её примере рассмотреть работу ещё одного фильтра.
         context['next_sale'] = None
         return context
 
 
 class AdCreateView(LoginRequiredMixin, CreateView):
-    # permission_required = ('news.add_post', 'news.change_post')
     template_name = 'ad_create.html'
     form_class = AdForm
 
     def post(self, request, *args, **kwargs):
-        # user = request.POST['user']
         author = Person.objects.get(user=request.user.id)
         new_ad = Ad(
-            author=author,  # получить автора по айдишнику из запроса Category.objects.get(id=category_id)
-            # category=Category.objects.get(id=request.POST['category']),
+            author=author,
             title=request.POST['title'],
             text=request.POST['text']
         )
@@ -57,7 +46,6 @@ class AdCreateView(LoginRequiredMixin, CreateView):
         new_ad.category.set([category])  # Используем метод set() для установки значения для поля many-to-many
 
         #  Запускаем задачу celery по рассылке подписчикам на данную категорию
-        # send_email_to_subscribers_of_new_post.delay(category_id=request.POST['category'], post_id=new_post.id)
 
         return redirect('/')
 
@@ -73,17 +61,16 @@ def CreateResponse(request, ad_id):
         response.save()
         return redirect('ad_detail', pk=ad_id)
     return render(request, 'create_response.html', {'ad': advertisement})
-    #return HttpResponse("Метод не поддерживается. Этот представление поддерживает только POST запросы.")
 
 
 class AdDetailView(LoginRequiredMixin, DetailView):
     template_name = 'ad_detail.html'
     queryset = Ad.objects.all()
 
-    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
+    def get_object(self, *args, **kwargs):
         obj = cache.get(f'ad-{self.kwargs["pk"]}',
                         None)
-        # если объекта нет в кэше, то получаем его и записываем в кэш
+
         if not obj:
             obj = super().get_object(queryset=self.queryset)
             cache.set(f'ad-{self.kwargs["pk"]}', obj)
@@ -98,9 +85,7 @@ class MyResponsesListView(LoginRequiredMixin, ListView):
     paginate_by = 2
 
     def get_queryset(self):
-        # Получаем текущего авторизованного пользователя
         current_user = self.request.user.id
-        # Фильтруем записи модели Response, где автор объявления равен текущему пользователю
         queryset = Response.objects.filter(ad__author=current_user)
         return queryset
 
@@ -114,7 +99,6 @@ class MyResponsesListView(LoginRequiredMixin, ListView):
 @login_required
 def accept_response(request):
     user = request.user
-    #ad_id = int(request.GET.get('ad_id'))
     response_id = int(request.GET.get('resp_id'))
     Response.objects.filter(id=response_id).update(accepted=True)
     mail_accepted_response_back()
@@ -125,7 +109,6 @@ def accept_response(request):
 @login_required
 def delete_response(request):
     user = request.user
-    #ad_id = int(request.GET.get('ad_id'))
     response_id = int(request.GET.get('resp_id'))
     Response.objects.filter(id=response_id).update(deleted=True)
     mail_accepted_response_back()
